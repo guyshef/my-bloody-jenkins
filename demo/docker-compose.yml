@@ -2,7 +2,7 @@ version: '2'
 services:
   ldap:
     image: osixia/openldap:1.2.1
-    volumes: 
+    volumes:
       - ./ldap/bootstrap/custom.ldif:/container/service/slapd/assets/config/bootstrap/ldif/100-custom.ldif
     ports:
       - '10389:389'
@@ -14,15 +14,6 @@ services:
       LDAP_READONLY_USER: 'true'
       LDAP_TLS: "false"
     command: --copy-service
-
-  ldap-admin:
-    image: osixia/phpldapadmin:0.7.1
-    ports:
-      - '6443:443'
-    environment:
-      PHPLDAPADMIN_LDAP_HOSTS: ldap
-    links:
-      - ldap
 
   jenkins:
     image: odavid/my-bloody-jenkins
@@ -41,6 +32,7 @@ services:
       JENKINS_ENV_CONFIG_YML_URL: file:///config.yml
       JENKINS_ENV_ADMIN_USER: jenkins.admin
       JENKINS_ENV_CONFIG_YML_URL_POLLING: '10'
+      JENKINS_ENV_CONFIG_MODE: ${JENKINS_ENV_CONFIG_MODE}
       # Disable hyper provision of slaves - docker plugin strategy is enough
       JAVA_OPTS_LOAD_STATS_CLOCK: ''
       # proxy
